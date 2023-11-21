@@ -211,12 +211,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         except Exception as e:
             print(e)
             return await client.edit_message_text(sender, edit_id, f'Failed to save: `{msg_link}`\n\nError: {str(e)}')
-        await edit.delete()
-        
-async def get_bulk_msg(userbot, client, sender, msg_link, i):
-    x = await client.send_message(sender, "Processing!")
-    await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
-
+        await edit.delete()        
     else:
         edit = await client.edit_message_text(sender, edit_id, "Cloning.")
         chat = msg_link.split("t.me")[1].split("/")[1]
