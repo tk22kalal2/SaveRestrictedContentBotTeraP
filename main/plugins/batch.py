@@ -82,31 +82,31 @@ async def run_batch(userbot, client, sender, link, _range):
         timer = 60
         if i < 25:
             timer = 5
-        if i < 50 and i > 25:
+        if 25 < i < 50:
             timer = 10
-        if i < 100 and i > 50:
+        if 50 < i < 100:
             timer = 15
-        if not 't.me/c/' in link:
+        if 't.me/c/' not in link:
             if i < 25:
                 timer = 2
             else:
                 timer = 3
         try: 
-            if not sender in batch:
+            if sender not in batch:
                 await client.send_message(sender, "Batch completed.")
                 break
         except Exception as e:
             print(e)
             await client.send_message(sender, "Batch completed.")
             break
-         try:
-             t = await get_bulk_msg(userbot, client, sender, link, i)
-             try:
-                 await t.forward(chat_id=DB_CHANNEL)
-             except FloodWait as fw:
-                 if int(fw.x) > 299:
-                     await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-                     break
+        try:
+            t = await get_bulk_msg(userbot, client, sender, link, i)
+            try:
+                await t.forward(chat_id=DB_CHANNEL)
+            except FloodWait as fw:
+                if int(fw.x) > 299:
+                    await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
+                    break
                 await asyncio.sleep(fw.x + 5)
                 t = await get_bulk_msg(userbot, client, sender, link, i)
                 try:
@@ -114,8 +114,10 @@ async def run_batch(userbot, client, sender, link, _range):
             protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
             await asyncio.sleep(timer)
             await protection.delete()
-         except Exception as e:
-         # Handle any other exceptions if needed
-         print(f"An error occurred: {e}")
+        except Exception as e:
+            # Handle any other exceptions if needed
+            print(f"An error occurred: {e}")
+
+
 
             
