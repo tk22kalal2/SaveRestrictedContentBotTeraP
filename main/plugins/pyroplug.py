@@ -231,8 +231,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             print(f"Failed to copy message: `{msg_link}`. Error: {str(copy_error)}")
             # Handle the specific copy error here if needed
             return await client.edit_message_text(sender, edit_id, f'Failed to copy: `{msg_link}`\n\nError: {str(copy_error)}')
-        finally:
-            await edit.delete()
+        await edit.delete()
 
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
     x = await client.send_message(sender, "Processing!")
