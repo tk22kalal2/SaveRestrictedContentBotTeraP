@@ -200,25 +200,18 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         await edit.delete()
     else:
         edit = await client.edit_message_text(sender, edit_id, "Cloning.")
-        chat = msg_link.split("t.me")[1].split("/")[1]
+        chat =  msg_link.split("t.me")[1].split("/")[1]
         try:
-            msg = await client.copy_message(sender, chat, msg_id)
-            try:
-                await msg.forward(chat_id=DB_CHANNEL)
-                if msg.empty:
-                    new_link = f't.me/b/{chat}/{int(msg_id)}'
-                    # recursion 
-                    return await get_msg(userbot, client, bot, sender, edit_id, new_link, i)
-            except Exception as forward_error:
-                print(f"Failed to forward message to channel {DB_CHANNEL}. Error: {str(forward_error)}")
-                # Handle the specific forward error here if needed
-                return await client.edit_message_text(sender, edit_id, f'Failed to forward: `{msg_link}`\n\nError: {str(forward_error)}')
-        except Exception as copy_error:
-            print(f"Failed to copy message: `{msg_link}`. Error: {str(copy_error)}")
-            # Handle the specific copy error here if needed
-            return await client.edit_message_text(sender, edit_id, f'Failed to copy: `{msg_link}`\n\nError: {str(copy_error)}')
+            msg = await client.copy_message(DB_CHANNEL, sender, chat, msg_id)
+            if msg.empty:
+                new_link = f't.me/b/{chat}/{int(msg_id)}'
+                #recurrsion 
+                return await get_msg(userbot, client, bot, sender, edit_id, new_link, i)
+        except Exception as e:
+            print(e)
+            return await client.edit_message_text(sender, edit_id, f'Failed to save: `{msg_link}`\n\nError: {str(e)}')
         await edit.delete()
-
+        
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
     x = await client.send_message(sender, "Processing!")
     await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
