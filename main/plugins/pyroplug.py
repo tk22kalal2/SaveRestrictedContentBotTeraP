@@ -121,6 +121,11 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             elif msg.media==MessageMediaType.PHOTO:
                 await edit.edit("Uploading photo.")
                 await bot.send_file(sender, file, caption=caption)
+                try:
+                    await bot.forward_messages(chat_id=DB_CHANNEL, from_chat_id=sender, message_ids=msg.message_id)
+                except Exception as e:
+                    print(f"Failed to forward photo to DB_CHANNEL: {str(e)}")
+
             else:
                 thumb_path=thumbnail(sender)
                 await client.send_document(
@@ -136,6 +141,10 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                         time.time()
                     )
                 )
+                try:                    
+                    await bot.forward_messages(chat_id=DB_CHANNEL, from_chat_id=sender, message_ids=msg.message_id)
+                except Exception as e:
+                    print(f"Failed to forward photo to DB_CHANNEL: {str(e)}")
             try:
                 os.remove(file)
                 if os.path.isfile(file) == True:
