@@ -3,7 +3,6 @@
 import asyncio, time, os
 
 from .. import bot as Drone
-from .. import DB_CHANNEL
 from main.plugins.progress import progress_for_pyrogram
 from main.plugins.helpers import screenshot
 
@@ -120,12 +119,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             
             elif msg.media==MessageMediaType.PHOTO:
                 await edit.edit("Uploading photo.")
-                x = await bot.send_file(sender, file, caption=caption)
-                try:
-                    await x.forward_messages(chat_id=DB_CHANNEL)
-                except Exception as e:
-                    print(f"Failed to forward photo to DB_CHANNEL: {str(e)}")
-
+                await bot.send_file(sender, file, caption=caption)
             else:
                 thumb_path=thumbnail(sender)
                 await client.send_document(
@@ -141,10 +135,6 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                         time.time()
                     )
                 )
-                try:                    
-                    await x.forward_messages(chat_id=DB_CHANNEL)
-                except Exception as e:
-                    print(f"Failed to forward photo to DB_CHANNEL: {str(e)}")
             try:
                 os.remove(file)
                 if os.path.isfile(file) == True:
@@ -211,7 +201,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         edit = await client.edit_message_text(sender, edit_id, "Cloning.")
         chat =  msg_link.split("t.me")[1].split("/")[1]
         try:
-            msg = await client.copy_message(DB_CHANNEL, sender, chat, msg_id)
+            msg = await client.copy_message(sender, chat, msg_id)
             if msg.empty:
                 new_link = f't.me/b/{chat}/{int(msg_id)}'
                 #recurrsion 
@@ -224,4 +214,3 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
     x = await client.send_message(sender, "Processing!")
     await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
-
