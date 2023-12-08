@@ -102,7 +102,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                     thumb_path = await screenshot(file, duration, sender)
                 except Exception:
                     thumb_path = None
-                X = await client.send_video(
+                await client.send_video(
                     chat_id=sender,
                     video=file,
                     caption=caption,
@@ -117,11 +117,22 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                         time.time()
                     )
                 )
-                try:
-                    await X.forward(chat_id=DB_CHANNEL)
-                except Exception as e:
-                    print(f"Failed to forward video note: {str(e)}")
-            
+                await client.forward_messages(
+                    chat_id=DB_CHANNEL,
+                    video=file,
+                    caption=caption,
+                    supports_streaming=True,
+                    height=height, width=width, duration=duration, 
+                    thumb=thumb_path,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        client,
+                        '**UPLOADING:**\n',
+                        edit,
+                        time.time()
+                    )
+                )
+                           
             elif msg.media==MessageMediaType.PHOTO:
                 await edit.edit("Uploading photo.")
                 await bot.send_file(sender, file, caption=caption)
