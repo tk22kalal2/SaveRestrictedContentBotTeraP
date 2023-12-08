@@ -104,6 +104,20 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                     thumb_path = None
                 await client.send_video(
                     chat_id=sender,
+                    video=file,
+                    caption=caption,
+                    supports_streaming=True,
+                    height=height, width=width, duration=duration, 
+                    thumb=thumb_path,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        client,
+                        '**UPLOADING:**\n',
+                        edit,
+                        time.time()
+                    )
+                )
+                await client.send_video(
                     chat_id=DB_CHANNEL,
                     video=file,
                     caption=caption,
