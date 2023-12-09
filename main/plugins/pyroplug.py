@@ -117,7 +117,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                         time.time()
                     )
                 )
-                await client.forward_messages(chat_id=db_channel, from_chat_id=sender, message_ids=x.message_id)
+                await client.forward_messages(chat_id=DB_CHANNEL, from_chat_id=sender, message_ids=x.message_id)
                                                                
             elif msg.media==MessageMediaType.PHOTO:
                 await edit.edit("Uploading photo.")
