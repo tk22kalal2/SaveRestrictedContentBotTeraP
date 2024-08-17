@@ -7,5 +7,9 @@ python-decouple
 pyrofork
 tgcrypto
 flask
-gunicorn==20.1.0
+gunicorn
 aiohttp
+pymongo[srv]
+Jinja2
+werkzeug
+itsdangerous
